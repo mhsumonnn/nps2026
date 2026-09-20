@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জাতীয় বেতনস্কেল ২০২৬ — বেতন নির্ধারণ ক্যালকুলেটর</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f6f4; --card:#ffffff; --ink:#1b2320; --muted:#5b665f;
+    --line:#e2e6e0; --accent:#0f6b4f; --accent-ink:#ffffff; --accent-soft:#e6f3ee;
+    --amber:#8a5a00; --amber-soft:#fbf1dd; --danger:#9c2b2b;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121613; --card:#1a201c; --ink:#eef1ee; --muted:#a3ada4;
+      --line:#2b332e; --accent:#3fbf8e; --accent-ink:#08150f; --accent-soft:#193226;
+      --amber:#e8c073; --amber-soft:#2c2510; --danger:#e78a8a;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121613; --card:#1a201c; --ink:#eef1ee; --muted:#a3ada4;
+    --line:#2b332e; --accent:#3fbf8e; --accent-ink:#08150f; --accent-soft:#193226;
+    --amber:#e8c073; --amber-soft:#2c2510; --danger:#e78a8a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Noto Sans Bengali','Noto Sans',system-ui,-apple-system,sans-serif;
+    line-height:1.55;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:28px 18px 60px;}
+  header.top{margin-bottom:20px;}
+  .badge{
+    display:inline-block; font-size:12.5px; font-weight:600; color:var(--accent);
+    background:var(--accent-soft); padding:4px 10px; border-radius:999px; margin-bottom:10px;
+  }
+  h1{font-size:1.5rem; margin:0 0 6px; font-weight:700;}
+  .subtitle{color:var(--muted); font-size:.92rem; margin:0;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; margin-bottom:18px; box-shadow:0 1px 2px rgba(0,0,0,.03);
+  }
+  .card h2{font-size:1.05rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr;}}
+  label{display:block; font-size:.85rem; font-weight:600; color:var(--muted); margin-bottom:6px;}
+  select, input[type=number]{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    background:var(--bg); color:var(--ink); font-size:.95rem; font-family:inherit;
+  }
+  select:focus, input:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  .field{margin-bottom:14px;}
+  .row-inline{display:flex; gap:10px; flex-wrap:wrap;}
+  .chip-toggle{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{
+    padding:8px 14px; border:1px solid var(--line); border-radius:999px; cursor:pointer;
+    font-size:.85rem; font-weight:600; color:var(--muted); background:var(--bg); user-select:none;
+  }
+  .chip.active{background:var(--accent); color:var(--accent-ink); border-color:var(--accent);}
+  table{width:100%; border-collapse:collapse; font-size:.9rem;}
+  th,td{text-align:left; padding:9px 8px; border-bottom:1px solid var(--line);}
+  th{color:var(--muted); font-weight:600; font-size:.8rem; text-transform:none;}
+  td.num, th.num{text-align:right; font-variant-numeric:tabular-nums;}
+  .result-hero{
+    display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;
+    background:var(--accent-soft); border-radius:10px; padding:14px 16px; margin-bottom:14px;
+  }
+  .result-hero .label{font-size:.85rem; color:var(--muted); font-weight:600;}
+  .result-hero .value{font-size:1.6rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .steps{font-size:.85rem; color:var(--muted); background:var(--bg); border:1px dashed var(--line); border-radius:10px; padding:12px 14px; margin-top:10px;}
+  .steps code{background:var(--accent-soft); color:var(--accent); padding:1px 5px; border-radius:5px; font-family:inherit; font-weight:600;}
+  .note{
+    font-size:.82rem; color:var(--amber); background:var(--amber-soft); border-radius:10px;
+    padding:10px 14px; margin-top:12px;
+  }
+  .foot-note{font-size:.78rem; color:var(--muted); margin-top:26px; border-top:1px solid var(--line); padding-top:14px;}
+  .section-divider{font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin:26px 0 10px; font-weight:700;}
+  .pill-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .pill{font-size:.78rem; padding:4px 10px; border-radius:999px; background:var(--bg); border:1px solid var(--line); color:var(--muted);}
+  .checkline{display:flex; align-items:center; gap:8px; font-size:.9rem; margin-bottom:10px;}
+  .checkline input{width:auto;}
+  .total-hero{
+    background:var(--accent); color:var(--accent-ink); border-radius:12px; padding:18px 20px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  .total-hero .t-label{font-size:.85rem; opacity:.85; font-weight:600;}
+  .total-hero .t-value{font-size:2rem; font-weight:700; font-variant-numeric:tabular-nums;}
+  .muted{color:var(--muted);}
+  select.warn{border-color:var(--danger);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="badge">এস. আর. ও. নং ৩৪৭-আইন/২০২৬ · ১৭ সেপ্টেম্বর ২০২৬</span>
+    <h1>জাতীয় বেতনস্কেল, ২০২৬ — বেতন নির্ধারণ ক্যালকুলেটর</h1>
+    <p class="subtitle">চাকরি (বেতন ও ভাতাদি) আদেশ, ২০২৬ অনুযায়ী ধাপে ধাপে বেতন নির্ধারণ ও ভাতাদি হিসাব</p>
+  </header>
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <h2>০১ · গ্রেড ও বর্তমান বেতন</h2>
+    <div class="grid2">
+      <div class="field">
+        <label for="gradeSel">গ্রেড নির্বাচন করুন</label>
+        <select id="gradeSel"></select>
+      </div>
+      <div class="field">
+        <label for="basicSel">৩০ জুন ২০২৬ তারিখের মূল বেতন (বর্তমান বেতনস্কেল, ২০১৫)</label>
+        <select id="basicSel"></select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>কর্মস্থলের এলাকা (বাড়ি ভাড়া ভাতার জন্য)</label>
+        <div class="chip-toggle" id="areaChips">
+          <div class="chip active" data-v="dhaka">ঢাকা উত্তর/দক্ষিণ সিটি কর্পোরেশন</div>
+          <div class="chip" data-v="city2">অন্যান্য সিটি কর্পোরেশন এলাকা</div>
+          <div class="chip" data-v="other">অন্যান্য এলাকা</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>বয়স (চিকিৎসা ভাতার জন্য)</label>
+        <div class="chip-toggle" id="ageChips">
+          <div class="chip active" data-v="under50">৫০ বছরের নিচে</div>
+          <div class="chip" data-v="over50">৫০ বছর বা তদূর্ধ্ব</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="childCount">সন্তান সংখ্যা (শিক্ষা সহায়ক ভাতার জন্য, সর্বোচ্চ ২ জন গণনা হবে)</label>
+      <input type="number" id="childCount" min="0" max="10" value="0">
+    </div>
+  </div>
+
+  <!-- BASIC FIXATION RESULT -->
+  <div class="card">
+    <h2>০২ · মূল বেতন নির্ধারণ (অনুচ্ছেদ ৫)</h2>
+    <div class="result-hero">
+      <span class="label">১ জুলাই ২০২৭ থেকে কার্যকর পূর্ণ মূল বেতন (অনুচ্ছেদ ৫ + ৯ অনুযায়ী, ২টি বার্ষিক বেতনবৃদ্ধিসহ)</span>
+      <span class="value" id="newBasicOut">৳ 0</span>
+    </div>
+    <div class="steps" id="fixationSteps"></div>
+    <div class="pill-row" style="margin-top:10px;">
+      <span class="pill" id="pillFixed"></span>
+      <span class="pill" id="pillOneInc"></span>
+    </div>
+
+    <div class="section-divider">বাস্তবায়নের সময়সূচি অনুযায়ী মূল বেতন</div>
+    <table>
+      <thead><tr><th>সময়কাল</th><th>হার</th><th class="num">মাসিক মূল বেতন</th></tr></thead>
+      <tbody id="phaseTable"></tbody>
+    </table>
+    <p class="note">১ জুলাই ২০২৬ থেকে এই আদেশ জারির তারিখ (১৭ সেপ্টেম্বর ২০২৬) পর্যন্ত সময়ের জন্য কর্মচারীগণ বকেয়া হিসেবে (ফেজ-১ হার অনুযায়ী) পার্থক্য প্রাপ্য হইবেন।</p>
+  </div>
+
+  <!-- ALLOWANCES -->
+  <div class="card">
+    <h2>০৩ · ভাতাদি — নতুন হার (১ জানুয়ারি ২০২৮ থেকে কার্যকর)</h2>
+    <p class="muted" style="font-size:.85rem; margin-top:-6px;">৩১ ডিসেম্বর ২০২৭ পর্যন্ত পূর্বের (৩০ জুন ২০২৬-এ প্রাপ্ত) হারেই সকল ভাতাদি বলবৎ থাকিবে। নিচের হার শুধুমাত্র ১ জানুয়ারি ২০২৮ থেকে প্রযোজ্য।</p>
+    <table>
+      <thead><tr><th>ভাতার নাম</th><th class="muted" style="font-size:.78rem;">ভিত্তি</th><th class="num">মাসিক হার</th></tr></thead>
+      <tbody id="allowanceTable"></tbody>
+    </table>
+    <div class="pill-row">
+      <span class="pill">বাংলা নববর্ষ ভাতা: মূল বেতনের ১৫% (বাৎসরিক, ১ বার)</span>
+      <span class="pill">বাৎসরিক উৎসব বোনাস: মূল বেতনের সমপরিমাণ, বছরে ২ বার</span>
+    </div>
+  </div>
+
+  <!-- GROSS SUMMARY -->
+  <div class="card">
+    <h2>০৪ · সম্ভাব্য মাসিক গ্রস বেতন (১ জানুয়ারি ২০২৮ থেকে, পূর্ণ হারে)</h2>
+    <table id="grossTable">
+      <tbody></tbody>
+    </table>
+    <div class="total-hero" style="margin-top:14px;">
+      <span class="t-label">মোট মাসিক গ্রস (মূল বেতন + ভাতাদি)</span>
+      <span class="t-value" id="grossOut">৳ 0</span>
+    </div>
+  </div>
+
+  <div class="foot-note">
+    এই ক্যালকুলেটরটি ১৭ সেপ্টেম্বর ২০২৬ তারিখে প্রকাশিত "চাকরি (বেতন ও ভাতাদি) আদেশ, ২০২৬" (এস. আর. ও. নং ৩৪৭-আইন/২০২৬) এর ভিত্তিতে তৈরি। বেতনস্কেল সারণি ও সূত্র মূল গেজেট থেকে সংগ্রহ করা হয়েছে; তবে টাইপিং বা পাঠ-ত্রুটির সম্ভাবনা উড়িয়ে দেওয়া যায় না — চূড়ান্ত বেতন নির্ধারণের আগে নিজ হিসাব শাখা বা মূল গেজেটের সঙ্গে মিলিয়ে নেওয়ার অনুরোধ থাকল। গ্রেড-১ এর ঊর্ধ্বে সুপার-স্কেল পদ (সিনিয়র সচিব ৳১,৬৪,০০০ ও মন্ত্রিপরিষদ সচিব/প্রধানমন্ত্রীর মুখ্য সচিব ৳১,৭২,০০০ — উভয়ই নির্ধারিত/fixed) এবং উচ্চতর গ্রেড (টাইম-স্কেল, অনুচ্ছেদ ৬) এই ক্যালকুলেটরে অন্তর্ভুক্ত নয়।
+	<h2>Copyright মোঃ মাহমুদুল হাসান (এসও-আইটি), জনতা ব্যাংক পিএলসি.</h2>
+  </div>
+
+</div>
+
+<script>
+// ---- Pay scale data, transcribed from the gazette (Article 3 table) ----
+// old = জাতীয় বেতনস্কেল ২০১৫ (বর্তমান), new = জাতীয় বেতনস্কেল ২০২৬ (১ জুলাই ২০২৬ হইতে কার্যকর)
+const SCALE = {
+  1:  {old:[78000], new:[156000]},
+  2:  {old:[66000,68480,71050,73720,76490], new:[132000,135700,139400,143200,147200,151200,153000]},
+  3:  {old:[56500,58760,61120,63570,66120,68770,71530,74400], new:[113000,117000,121100,125300,129700,134300,139000,143800,148800]},
+  4:  {old:[50000,52000,54080,56250,58500,60840,63280,65820,68460,71200], new:[100000,103500,107200,110900,114800,118800,123000,127300,131700,136300,142400]},
+  5:  {old:[43000,44940,46970,49090,51300,53610,56030,58560,61200,63960,66840,69850], new:[86000,89500,93100,96800,100700,104700,108900,113200,117700,122500,127400,132400,139700]},
+  6:  {old:[35500,37280,39150,41110,43170,45330,47600,49980,52480,55110,57870,60770,63810,67010], new:[71000,74600,78300,82200,86400,90700,95200,100000,104900,110200,115700,121500,127600,134000]},
+  7:  {old:[29000,30450,31980,33580,35260,37030,38890,40840,42890,45040,47300,49670,52160,54770,57510,60390,63410], new:[58000,60900,64000,67200,70500,74100,77800,81700,85700,90000,94500,99200,104200,109400,114900,120600,126800]},
+  8:  {old:[23000,24150,25360,26630,27970,29370,30840,32390,34010,35720,37510,39390,41360,43430,45610,47900,50300,52820,55470], new:[46000,48300,50800,53300,56000,58800,61700,64800,68000,71400,75000,78700,82700,86900,91300,95900,100700,105500,110800]},
+  9:  {old:[22000,23100,24260,25480,26760,28100,29510,30990,32540,34170,35880,37680,39570,41550,43630,45820,48120,50530,53060], new:[44000,46200,48600,51000,53500,56200,59000,62000,65100,68300,71700,75300,79100,83000,87200,91500,96100,100900,105900]},
+  10: {old:[16000,16800,17640,18530,19460,20440,21470,22550,23680,24870,26120,27430,28810,30260,31780,33370,35040,36800,38640], new:[32000,33600,35300,37100,38900,40900,42900,45100,47400,49800,52300,54900,57600,60500,63500,66700,70100,73600,77300]},
+  11: {old:[12500,13130,13790,14480,15210,15980,16780,17620,18510,19440,20420,21450,22530,23660,24850,26100,27410,28790,30230], new:[25000,26300,27600,29000,30400,32000,33600,35200,37000,38800,40800,42800,44900,47200,49500,52000,54600,57300,60500]},
+  12: {old:[11300,11870,12470,13100,13760,14450,15180,15940,16740,17580,18460,19390,20360,21380,22450,23580,24760,26000,27300], new:[24300,25600,26800,28200,29600,31100,32600,34200,36000,37700,39600,41600,43700,45900,48200,50600,53100,55700,58700]},
+  13: {old:[11000,11550,12130,12740,13380,14050,14760,15500,16280,17100,17960,18860,19810,20810,21860,22960,24110,25320,26590], new:[24000,25200,26500,27800,29200,30700,32200,33800,35500,37300,39100,41100,43200,45300,47600,49900,52400,55100,58000]},
+  14: {old:[10200,10710,11250,11820,12420,13050,13710,14400,15120,15880,16680,17520,18400,19320,20290,21310,22380,23500,24680], new:[23500,24700,26000,27300,28600,30000,31500,33100,34800,36500,38300,40200,42300,44600,46600,48900,51300,53900,56600]},
+  15: {old:[9700,10190,10700,11240,11810,12410,13040,13700,14390,15110,15870,16670,17510,18390,19310,20280,21300,22370,23490], new:[22800,24000,25200,26400,27800,29100,30600,32100,33700,35400,37200,39000,41000,43000,45200,47400,49800,52300,55200]},
+  16: {old:[9300,9770,10260,10780,11320,11890,12490,13120,13780,14470,15200,15960,16760,17600,18480,19410,20390,21410,22490], new:[21900,23000,24200,25400,26700,28000,29400,30900,32400,34000,35700,37500,39400,41300,43400,45600,47900,50200,52900]},
+  17: {old:[9000,9450,9930,10430,10960,11510,12090,12700,13340,14010,14720,15460,16240,17060,17920,18820,19770,20760,21800], new:[21400,22500,23600,24800,26100,27400,28700,30200,31700,33300,34900,36700,38500,40400,42400,44500,46800,49100,51900]},
+  18: {old:[8800,9240,9710,10200,10710,11250,11820,12420,13050,13710,14400,15120,15880,16680,17520,18400,19320,20290,21310], new:[21000,22100,23200,24400,25600,26900,28200,29600,31100,32600,34300,36000,37800,39600,41600,43700,45900,48200,50900]},
+  19: {old:[8500,8930,9380,9850,10350,10870,11420,12000,12600,13230,13900,14600,15330,16100,16910,17770,18650,19590,20570], new:[20500,21600,22700,23800,25000,26200,27500,28900,30300,31900,33400,35100,36900,38700,40600,42700,44800,47000,49600]},
+  20: {old:[8250,8670,9110,9570,10050,10560,11090,11650,12240,12860,13510,14190,14900,15650,16480,17290,18140,19050,20010], new:[20000,21000,22100,23200,24400,25600,26900,28200,29600,31100,32600,34300,36000,37800,39600,41600,43700,45900,48400]}
+};
+
+const fmt = n => '৳ ' + Math.round(n).toLocaleString('en-IN');
+
+// House rent %-table: [grade band low(numerically higher)..high, dhaka%, city2%, other%]
+// bands per the gazette schedule (গ্রেড অনুযায়ী)
+function houseRentPercent(grade, area){
+  let band;
+  if(grade>=16 && grade<=20) band = {dhaka:60, city2:50, other:45};
+  else if(grade>=10 && grade<=15) band = {dhaka:50, city2:40, other:35};
+  else if(grade>=5 && grade<=9) band = {dhaka:45, city2:35, other:30};
+  else band = {dhaka:40, city2:30, other:25}; // grade 1-4
+  return band[area];
+}
+
+function mobileAllowance(grade){ return grade<=5 ? 500 : 150; }
+function tiffinAllowance(grade){ return (grade>=13 && grade<=20) ? 500 : 0; }
+function transportAllowance(grade){ return (grade>=11 && grade<=20) ? 600 : 0; }
+function medicalAllowance(ageBand){ return ageBand==='over50' ? 4000 : 3000; }
+function educationAllowance(children){
+  const n = Math.min(children||0, 2);
+  return n * 500; // capped at 1000 total for 2 children
+}
+
+function nextStep(newArr, v){
+  const idx = newArr.indexOf(v);
+  if(idx===-1 || idx===newArr.length-1) return v; // already at ceiling / not found
+  return newArr[idx+1];
+}
+
+function fixNewBasic(grade, oldBasic){
+  const s = SCALE[grade];
+  if(s.old.length===1){
+    // Grade 1 / flat fixed pay — no step, no increment mechanics
+    return {fixedX:s.new[0], oneIncX:s.new[0], twoIncX:s.new[0], diff:0, target:s.new[0], matchedExact:true, startOld:s.old[0], startNew:s.new[0]};
+  }
+  const startOld = s.old[0], startNew = s.new[0];
+  let fixedX, matchedExact, diff, target;
+  if(oldBasic===startOld){
+    fixedX = startNew; diff = 0; target = startNew; matchedExact = true;
+  } else {
+    diff = oldBasic - startOld;
+    target = startNew + diff;
+    fixedX = s.new.find(v=>v>=target);
+    if(fixedX===undefined) fixedX = s.new[s.new.length-1];
+    matchedExact = s.new.includes(target);
+  }
+  // Article ৯(২): once pay is fixed per Article ৫, one annual increment is payable on 1 July 2026
+  const oneIncX = nextStep(s.new, fixedX);
+  // Article ৯(১): normal annual increment date is 1 July each year — the next one falls 1 July 2027
+  const twoIncX = nextStep(s.new, oneIncX);
+  return {fixedX, oneIncX, twoIncX, diff, target, matchedExact, startOld, startNew};
+}
+
+function buildOptions(){
+  const gradeSel = document.getElementById('gradeSel');
+  gradeSel.innerHTML = '';
+  for(let g=1; g<=20; g++){
+    const o = document.createElement('option');
+    o.value = g; o.textContent = 'গ্রেড ' + g;
+    gradeSel.appendChild(o);
+  }
+  gradeSel.value = 9;
+  populateBasics();
+}
+
+function populateBasics(){
+  const grade = parseInt(document.getElementById('gradeSel').value,10);
+  const basicSel = document.getElementById('basicSel');
+  basicSel.innerHTML = '';
+  SCALE[grade].old.forEach((v,i)=>{
+    const o = document.createElement('option');
+    o.value = v;
+    o.textContent = '৳ ' + v.toLocaleString('en-IN') + (i===0 ? ' (প্রারম্ভিক ধাপ)' : ' (ধাপ ' + (i+1) + ')');
+    basicSel.appendChild(o);
+  });
+}
+
+function getActiveChip(containerId){
+  return document.querySelector('#'+containerId+' .chip.active').dataset.v;
+}
+
+function setupChips(containerId, onChange){
+  document.querySelectorAll('#'+containerId+' .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('#'+containerId+' .chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      onChange();
+    });
+  });
+}
+
+function render(){
+  const grade = parseInt(document.getElementById('gradeSel').value,10);
+  const oldBasic = parseInt(document.getElementById('basicSel').value,10);
+  const area = getActiveChip('areaChips');
+  const ageBand = getActiveChip('ageChips');
+  const children = parseInt(document.getElementById('childCount').value,10) || 0;
+
+  const fx = fixNewBasic(grade, oldBasic);
+  document.getElementById('newBasicOut').textContent = fmt(fx.twoIncX);
+
+  let stepsHtml;
+  if(SCALE[grade].old.length===1){
+    stepsHtml = `গ্রেড ১ একটি নির্ধারিত (fixed) বেতন — কোনো ধাপ বা ইনক্রিমেন্ট গণনার প্রয়োজন নেই। নির্ধারিত বেতন সরাসরি <code>${fmt(fx.fixedX)}</code>।`;
+    document.getElementById('pillFixed').textContent = `অনুচ্ছেদ ৫ অনুযায়ী নির্ধারিত: ${fmt(fx.fixedX)}`;
+    document.getElementById('pillOneInc').textContent = `প্রযোজ্য নয়`;
+  } else {
+    if(fx.diff===0){
+      stepsHtml = `বর্তমান বেতন <code>${fmt(oldBasic)}</code> স্কেলের প্রারম্ভিক ধাপ হওয়ায়, অনুচ্ছেদ ৫(ক) অনুযায়ী নতুন স্কেলের প্রারম্ভিক ধাপ <code>${fmt(fx.fixedX)}</code> সরাসরি প্রযোজ্য।`;
+    } else {
+      stepsHtml = `<strong>ধাপ ১ — অনুচ্ছেদ ৫ অনুযায়ী বেতন নির্ধারণ:</strong> পার্থক্য = ${fmt(oldBasic)} − ${fmt(fx.startOld)} = <code>${fmt(fx.diff)}</code>। নতুন স্কেলের প্রারম্ভিক ধাপ + পার্থক্য = ${fmt(fx.startNew)} + ${fmt(fx.diff)} = <code>${fmt(fx.target)}</code>। ${fx.matchedExact ? 'এই অঙ্কটি নতুন স্কেলের একটি ধাপের সমান হওয়ায় সেই ধাপেই বেতন নির্ধারিত হয়।' : 'নতুন স্কেলে এই অঙ্কের সমান কোনো ধাপ না থাকায়, পরবর্তী উচ্চতর ধাপ অর্থাৎ <code>' + fmt(fx.fixedX) + '</code>-এ বেতন নির্ধারিত হয়।'}`;
+    }
+    stepsHtml += `<br><br><strong>ধাপ ২ — অনুচ্ছেদ ৯(২): ১ জুলাই ২০২৬-এ ১টি বার্ষিক বেতনবৃদ্ধি:</strong> নির্ধারিত ধাপ <code>${fmt(fx.fixedX)}</code> থেকে পরবর্তী ধাপে উন্নীত হয়ে দাঁড়ায় <code>${fmt(fx.oneIncX)}</code> — এই অঙ্কটিই ১(৩) অনুচ্ছেদের ফেজ-ভিত্তিক হিসাবে "নতুন বেতন" হিসেবে ব্যবহৃত হয়।<br><br><strong>ধাপ ৩ — অনুচ্ছেদ ৯(১): ১ জুলাই ২০২৭-এর নিয়মিত বার্ষিক বেতনবৃদ্ধি:</strong> <code>${fmt(fx.oneIncX)}</code> থেকে আরও এক ধাপ বেড়ে ১ জুলাই ২০২৭ থেকে পূর্ণ হারে কার্যকর হয় <code>${fmt(fx.twoIncX)}</code>।`;
+  }
+  document.getElementById('fixationSteps').innerHTML = stepsHtml;
+  if(SCALE[grade].old.length>1){
+    document.getElementById('pillFixed').textContent = `অনুচ্ছেদ ৫ অনুযায়ী নির্ধারিত (ইনক্রিমেন্ট ছাড়া): ${fmt(fx.fixedX)}`;
+    document.getElementById('pillOneInc').textContent = `+১ ইনক্রিমেন্ট (১ জুলাই ২০২৬, অনুচ্ছেদ ৯(২)): ${fmt(fx.oneIncX)}`;
+  }
+
+  // phased table — the "new pay" reference for the ৪০/৫০% and ৭০/৭৫% formula is the
+  // ১ জুলাই ২০২৬ figure that already includes the one-time increment under Article ৯(২)
+  const isOfficer = grade <= 9;
+  const p1pct = isOfficer ? 0.40 : 0.50;
+  const p2pct = isOfficer ? 0.70 : 0.75;
+  const diffTotal = fx.oneIncX - oldBasic;
+  const phase1 = oldBasic + p1pct*diffTotal;
+  const phase2 = oldBasic + p2pct*diffTotal;
+  const phase3 = fx.twoIncX;
+
+  const rows = [
+    ['১ জুলাই ২০২৬ – ৩১ ডিসেম্বর ২০২৬', (p1pct*100)+'%', phase1],
+    ['১ জানুয়ারি ২০২৭ – ৩০ জুন ২০২৭', (p2pct*100)+'%', phase2],
+    ['১ জুলাই ২০২৭ থেকে (নিয়মিত বার্ষিক বেতনবৃদ্ধিসহ পূর্ণ হার)', '১০০%', phase3],
+  ];
+  document.getElementById('phaseTable').innerHTML = rows.map(r=>
+    `<tr><td>${r[0]}</td><td>${r[1]}</td><td class="num">${fmt(r[2])}</td></tr>`
+  ).join('');
+
+  // allowances (effective 1 Jan 2028, computed on full new basic)
+  const hrPct = houseRentPercent(grade, area);
+  const hr = fx.twoIncX * hrPct/100;
+  const med = medicalAllowance(ageBand);
+  const mob = mobileAllowance(grade);
+  const tif = tiffinAllowance(grade);
+  const trans = transportAllowance(grade);
+  const edu = educationAllowance(children);
+
+  const aRows = [
+    ['বাড়ি ভাড়া ভাতা', `মূল বেতনের ${hrPct}%`, hr],
+    ['চিকিৎসা ভাতা', ageBand==='over50' ? '৫০ বছর বা তদূর্ধ্ব' : '৫০ বছরের নিচে', med],
+    ['মোবাইল ভাতা', grade<=5 ? 'গ্রেড ১-৫' : 'গ্রেড ৬-২০', mob],
+    ['টিফিন ভাতা', tif>0 ? 'গ্রেড ১৩-২০' : 'প্রযোজ্য নয় (শুধু গ্রেড ১৩-২০)', tif],
+    ['যাতায়াত ভাতা', trans>0 ? 'গ্রেড ১১-২০, সিটি কর্পোরেশন এলাকা' : 'প্রযোজ্য নয় (শুধু গ্রেড ১১-২০)', trans],
+    ['শিক্ষা সহায়ক ভাতা', children>0 ? `${Math.min(children,2)} সন্তান × ৳৫০০` : 'সন্তান নেই', edu],
+  ];
+  document.getElementById('allowanceTable').innerHTML = aRows.map(r=>
+    `<tr><td>${r[0]}</td><td class="muted" style="font-size:.78rem;">${r[1]}</td><td class="num">${fmt(r[2])}</td></tr>`
+  ).join('');
+
+  const grossRows = [
+    ['মূল বেতন (পূর্ণ হার)', phase3],
+    ['বাড়ি ভাড়া ভাতা', hr],
+    ['চিকিৎসা ভাতা', med],
+    ['মোবাইল ভাতা', mob],
+    ['টিফিন ভাতা', tif],
+    ['যাতায়াত ভাতা', trans],
+    ['শিক্ষা সহায়ক ভাতা', edu],
+  ];
+  document.querySelector('#grossTable tbody').innerHTML = grossRows.map(r=>
+    `<tr><td>${r[0]}</td><td class="num">${fmt(r[1])}</td></tr>`
+  ).join('');
+
+  const gross = phase3 + hr + med + mob + tif + trans + edu;
+  document.getElementById('grossOut').textContent = fmt(gross);
+}
+
+document.getElementById('gradeSel').addEventListener('change', ()=>{ populateBasics(); render(); });
+document.getElementById('basicSel').addEventListener('change', render);
+document.getElementById('childCount').addEventListener('input', render);
+setupChips('areaChips', render);
+setupChips('ageChips', render);
+
+buildOptions();
+render();
+</script>
+</body>
+</html>
